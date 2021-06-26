@@ -9,11 +9,6 @@ import (
 // See also: https://api.slack.com/methods/chat.postMessage
 // And also: https://docs.quill.chat/docs/specification
 type Message struct {
-	// Channel to send message to.
-	//
-	// Can be an encoded ID (eg. C024BE91L), or the channel's name (eg. #general).
-	Channel string `json:"channel"`
-
 	// Text of the message to send. Required, unless providing only attachments instead.
 	Text string `json:"text,omitempty"`
 

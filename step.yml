@@ -1,5 +1,5 @@
 title: Send a Quill message
-summary: Send a [Quill](https://quill.chat/) message to a channel or group.
+summary: Send a [Quill](https://quill.chat/) message to a channel.
 description: |-
   
   Post a [Quill](https://quill.chat/) message using a Webhook.

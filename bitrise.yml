@@ -18,8 +18,7 @@ workflows:
         title: On Success
         is_skippable: false
         inputs:
-        - api_token: $SLACK_API_TOKEN
-        - channel: $SLACK_CHANNEL
+        - webhook_url: $SLACK_WEBHOOK_URL
         - from_username: step-dev-test
         - link_names: "yes"
         - message: |
@@ -30,21 +29,19 @@ workflows:
             and linkify @slackbot #random
         - color: good
     - path::./:
-        title: On Success - without channel
+        title: On Success - warning color
         is_skippable: false
         inputs:
         - webhook_url: $SLACK_WEBHOOK_URL
-        - channel: ""
         - from_username: step-dev-test
-        - message: On Success test - without channel param
+        - message: On Success test - warning color
         - color: warning
     - path::./:
         title: On Success
         description: Overwrite the emoji parameter with an Icon URL input.
         is_skippable: false
         inputs:
-        - api_token: $SLACK_API_TOKEN
-        - channel: $SLACK_CHANNEL
+        - webhook_url: $SLACK_WEBHOOK_URL
         - from_username: step-dev-test-2
         - message: The Icon URL should be used instead of the Emoji input!
         - emoji: ':white_check_mark:'
@@ -56,7 +53,6 @@ workflows:
         is_skippable: false
         inputs:
         - webhook_url: $SLACK_WEBHOOK_URL
-        - channel: $SLACK_CHANNEL
         - from_username: step-dev-test
         - message: |
             On Success test - with an image
@@ -79,8 +75,6 @@ workflows:
         is_skippable: false
         inputs:
         - webhook_url: $SLACK_WEBHOOK_URL
-        - api_token: $SLACK_API_TOKEN
-        - channel: $SLACK_CHANNEL
         - from_username: step-dev-test
         - message: $SLACK_MESSAGE_FROM_SCRIPT
   fail-message-test:
@@ -94,18 +88,8 @@ workflows:
         is_skippable: false
         inputs:
         - webhook_url: $SLACK_WEBHOOK_URL
-        - api_token: $SLACK_API_TOKEN
-        - channel: $SLACK_CHANNEL
         - from_username_on_error: step-dev-test-ON-ERROR
         - message: On Error TEST
-  invalid-channel-test:
-    steps:
-    - path::./:
-        is_skippable: false
-        inputs:
-        - webhook_url: $SLACK_WEBHOOK_URL
-        - api_token: $SLACK_API_TOKEN
-        - channel: no-channel-like-this
   missing-webhook-url-test:
     steps:
     - path::./:

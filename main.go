@@ -21,8 +21,6 @@ type Config struct {
 	// Message
 	WebhookURL       stepconf.Secret `env:"webhook_url"`
 	APIToken         stepconf.Secret `env:"api_token"`
-	Channel          string          `env:"channel"`
-	ChannelOnError   string          `env:"channel_on_error"`
 	Text             string          `env:"text"`
 	TextOnError      string          `env:"text_on_error"`
 	IconEmoji        string          `env:"emoji"`
@@ -79,7 +77,6 @@ func ensureNewlines(s string) string {
 
 func newMessage(c Config) Message {
 	msg := Message{
-		Channel:     selectValue(c.Channel, c.ChannelOnError),
 		Text:        selectValue(c.Text, c.TextOnError),
 		ThreadTitle: selectValue(c.ThreadTitle, c.ThreadTitleOnError),
 		ThreadUID:   selectValue(c.ThreadUID, c.ThreadUIDOnError),
