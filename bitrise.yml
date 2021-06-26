@@ -3,7 +3,7 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 
 app:
   envs:
-  - BITRISE_STEP_GIT_CLONE_URL: https://github.com/bitrise-io/steps-slack-message.git
+  - BITRISE_STEP_GIT_CLONE_URL: https://github.com/HarperDog/steps-quill-message.git
 
 workflows:
   test:

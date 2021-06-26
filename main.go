@@ -33,6 +33,12 @@ type Config struct {
 	Username         string          `env:"from_username"`
 	UsernameOnError  string          `env:"from_username_on_error"`
 
+	// Thread extensions
+	ThreadTitle        string `env:"thread_title"`
+	ThreadTitleOnError string `env:"thread_title_on_error"`
+	ThreadUID          string `env:"thread_uid"`
+	ThreadUIDOnError   string `env:"thread_uid_on_error"`
+
 	// Attachment
 	Color           string `env:"color,required"`
 	ColorOnError    string `env:"color_on_error"`
@@ -73,8 +79,10 @@ func ensureNewlines(s string) string {
 
 func newMessage(c Config) Message {
 	msg := Message{
-		Channel: selectValue(c.Channel, c.ChannelOnError),
-		Text:    selectValue(c.Text, c.TextOnError),
+		Channel:     selectValue(c.Channel, c.ChannelOnError),
+		Text:        selectValue(c.Text, c.TextOnError),
+		ThreadTitle: selectValue(c.ThreadTitle, c.ThreadTitleOnError),
+		ThreadUID:   selectValue(c.ThreadUID, c.ThreadUIDOnError),
 		Attachments: []Attachment{{
 			Fallback:   ensureNewlines(selectValue(c.Message, c.MessageOnError)),
 			Color:      selectValue(c.Color, c.ColorOnError),

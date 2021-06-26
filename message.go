@@ -7,6 +7,7 @@ import (
 
 // Message to post to a slack channel.
 // See also: https://api.slack.com/methods/chat.postMessage
+// And also: https://docs.quill.chat/docs/specification
 type Message struct {
 	// Channel to send message to.
 	//
@@ -15,6 +16,14 @@ type Message struct {
 
 	// Text of the message to send. Required, unless providing only attachments instead.
 	Text string `json:"text,omitempty"`
+
+	// Quill: Unique ID of the thread to create or reuse when posting this message
+	// The first time you use this, a new thread will be created.
+	// Subsequent requests with the same value will post messages to the same thread.
+	ThreadUID string `json:"thread_uid,omitempty"`
+
+	// Quill: Set the title of a new thread, or update the title of an existing thread.
+	ThreadTitle string `json:"title,omitempty"`
 
 	// Attachments is a list of structured attachments.
 	Attachments []Attachment `json:"attachments,omitempty"`

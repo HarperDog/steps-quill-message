@@ -1,6 +1,6 @@
-# Slack Message step
+# Quill Message step
 
-Send a Slack message from your [bitrise](https://www.bitrise.io/cli) build!
+Send a Quill message from your [bitrise](https://www.bitrise.io/cli) build!
 
 
 ## How to use this Step

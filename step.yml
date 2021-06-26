@@ -1,8 +1,10 @@
-title: Send a Slack message
-summary: Send a [Slack](https://slack.com/) message to a channel or group.
+title: Send a Quill message
+summary: Send a [Quill](https://quill.chat/) message to a channel or group.
 description: |-
   
-  Send a [Slack](https://slack.com/) message to a Slack user, a group, or a channel. Create and customize the messages however you see fit. Among other things, you can:
+  Post a [Quill](https://quill.chat/) message using a Webhook.
+  Create and customize the messages however you see fit.
+  Among other things, you can:
   
   - Set a different text for failed and successful builds.
   - Add an icon and/or emojis to your messages. 
@@ -12,38 +14,36 @@ description: |-
   
   ### Configuring the Step 
   
-  To use this Step, you need either an incoming Slack webhook or a Slack bot user with an API token. You can set up both on your Slack account:
+  To use this Step, you need [a Quill incoming webhook](https://docs.quill.chat/docs/specification).
+  The webhook is created for a specific channel, so the channel cannot be changed through configuration in this Step.
   
-  - [Incoming webhooks](https://api.slack.com/incoming-webhooks).
-  - [Bot user with an API token](https://api.slack.com/bot-users).
+  Once you're ready with that, come back to Bitrise and configure the Step itself.
   
-  Once you're ready with those, come back to Bitrise and configure the Step itself.
-  
-  1. Create a [Secret Env Var](https://devcenter.bitrise.io/builds/env-vars-secret-env-vars/) for either your Slack webhook URL or your Slack API token.
-  1. Add the Secret to either the **Slack Webhook URL** or the **Slack API token** input.
-  1. Toggle the **Run if previous Step failed** option on - you should see a white checkmark on green background next to it. This allows Slack messages to be sent for failed builds, too.
-  1. In the **Target Slack channel, group or username**, set where the Slack message should be sent. 
+  1. Create a [Secret Env Var](https://devcenter.bitrise.io/builds/env-vars-secret-env-vars/) for either your Quill webhook URL.
+  1. Add the Secret to **Quill Webhook URL**.
+  1. Toggle the **Run if previous Step failed** option on - you should see a white checkmark on green background next to it. This allows Quill messages to be sent for failed builds, too.
   1. Customize your messages as you'd like. For the details, see the respective inputs.  
   
   ### Troubleshooting 
   
   Don't forget to make sure that the Step runs even if the build fails: you need to set it so that it runs even if a previous Step failed. 
   
-  If the Step fails, check your Slack settings, the incoming webhook or the API token, and your Slack channel permissions. 
+  If the Step fails, check your Quill settings and the incoming webhook.
   
   ### Useful links 
   
-  - [Integrating with Slack](https://devcenter.bitrise.io/builds/configuring-notifications/#integrating-with-slack)
+  - [Quill incoming webhooks](https://docs.quill.chat/docs/specification)
   - [Slack attachments](https://api.slack.com/messaging/composing/layouts#attachments)
   
   ### Related Steps 
   
+  - [Slack message](https://www.bitrise.io/integrations/steps/slack)
   - [Send email with Mailgun](https://www.bitrise.io/integrations/steps/email-with-mailgun)
   - [Post Jira Comment](https://www.bitrise.io/integrations/steps/post-jira-comment-with-build-details)
 
-website: https://github.com/bitrise-io/steps-slack-message
-source_code_url: https://github.com/bitrise-io/steps-slack-message
-support_url: https://github.com/bitrise-io/steps-slack-message/issues
+website: https://github.com/HarperDog/steps-quill-message
+source_code_url: https://github.com/HarperDog/steps-quill-message
+support_url: https://github.com/HarperDog/steps-quill-message/issues
 type_tags:
   - notification
 is_requires_admin_user: false
@@ -51,7 +51,7 @@ is_always_run: true
 is_skippable: true
 toolkit:
   go:
-    package_name: github.com/bitrise-io/steps-slack-message
+    package_name: github.com/HarperDog/steps-quill-message
 inputs:
   - is_debug_mode: "no"
     opts:
@@ -66,37 +66,14 @@ inputs:
 # Message inputs
   - webhook_url:
     opts:
-      title: "Slack Webhook URL (Webhook or API token is required)"
+      title: "Quill Webhook URL"
       description: |
-         **Either webhook\_url or api\_token input is required.**
-         To register an **Incoming WebHook integration** visit: https://api.slack.com/incoming-webhooks
-      is_required: false
+         You can create an incoming channel webhook for a channel by going to Settings,
+         selecting the Team that owns the channel,
+         clicking the Incoming Webhooks tab then clicking Add Webhook.
+      is_required: true
       is_sensitive: true
-  - api_token: 
-    opts:
-      title: "Slack API token (Webhook or API token is required)"
-      description: |
-         **Either webhook\_url or api\_token input is required.**
-         
-         To setup a **bot with an API token** visit: https://api.slack.com/bot-users
-      is_required: false
-      is_sensitive: true
-  - channel:
-    opts:
-      title: "Target Slack channel, group or username"
-      description: |
-        Can be an encoded ID, or the channel's name.
-         Examples:
-         * channel ID: C024BE91L
-         * channel: #general
-         * username: @username
-  - channel_on_error:
-    opts:
-      title: "Target Slack channel, group or username if the build failed"
-      description: |
-         * channel example: #general
-         * username example: @username
-      category: If Build Failed
+
   - text:
     opts:
       title: "Text of the message."
@@ -111,11 +88,39 @@ inputs:
         leave this option empty then the default one will be used.
       category: If Build Failed
 
+  - thread_title:
+    opts:
+      title: "Title of the message thread"
+      description: |
+        Set the title of a new thread, or update the title of an existing thread.
+  - thread_title_on_error:
+    opts:
+      title: "Title of the message thread if the build failed"
+      description: |
+        This option will be used if the build failed. If you
+        leave this option empty then the default one will be used.
+      category: If Build Failed
+
+  - thread_uid:
+    opts:
+      title: "Thread UID"
+      description: |
+        Unique ID of the thread to create or reuse when posting this message.
+        The first time a specific value is given, a new thread will be created.
+        Subsequent requests with the same value will post messages to the same thread.
+  - thread_uid_on_error:
+    opts:
+      title: "Thread UID if the build failed"
+      description: |
+        This option will be used if the build failed. If you
+        leave this option empty then the default one will be used.
+      category: If Build Failed
+
   - emoji:
     opts:
       title: "Emoji to use as the icon for the message"
       description: |
-        Optionally you can specify a Slack emoji as the sender
+        Optionally you can specify an emoji as the sender
         icon. You can use the Ghost icon for example
         if you specify `:ghost:` here as an input.
         **If you specify an Icon URL then this Emoji input will be ignored!**
@@ -133,10 +138,9 @@ inputs:
       description: |
         Optionally, you can specify a custom icon image URL
         which will be presented as the sender icon.
-        Slack recommends an image a square image,
+        A square image is recommended,
         which can't be larger than 128px in either width or height,
         and it must be smaller than 64K in size.
-        Slack custom emoji guideline: [https://slack.zendesk.com/hc/en-us/articles/202931348-Using-emoji-and-emoticons](https://slack.zendesk.com/hc/en-us/articles/202931348-Using-emoji-and-emoticons)
         If you specify this input, the **Emoji** input will be ignored!
   - icon_url_on_error: "https://github.com/bitrise-io.png"
     opts:
@@ -169,7 +173,7 @@ inputs:
       category: If Build Failed
 
 # Attachment inputs
-        
+
   - color: "#3bc3a3"
     opts:
       title: "Message color"
