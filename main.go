@@ -20,7 +20,6 @@ type Config struct {
 
 	// Message
 	WebhookURL       stepconf.Secret `env:"webhook_url"`
-	APIToken         stepconf.Secret `env:"api_token"`
 	Text             string          `env:"text"`
 	TextOnError      string          `env:"text_on_error"`
 	IconEmoji        string          `env:"emoji"`
@@ -122,10 +121,6 @@ func postMessage(conf Config, msg Message) error {
 	req, err := http.NewRequest("POST", url, bytes.NewReader(b))
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
 
-	if string(conf.APIToken) != "" {
-		req.Header.Add("Authorization", "Bearer "+string(conf.APIToken))
-	}
-
 	client := &http.Client{}
 
 	resp, err := client.Do(req)
@@ -150,15 +145,10 @@ func postMessage(conf Config, msg Message) error {
 }
 
 func validate(conf *Config) error {
-	if conf.APIToken == "" && conf.WebhookURL == "" {
-		return fmt.Errorf("Both API Token and WebhookURL are empty. You need to provide one of them. If you want to use incoming webhooks provide the webhook url. If you want to use a bot to send a message provide the bot API token")
+	if conf.WebhookURL == "" {
+		return fmt.Errorf("WebhookURL is empty")
 	}
 
-	if conf.APIToken != "" && conf.WebhookURL != "" {
-		log.Warnf("Both API Token and WebhookURL are provided. Using the API Token")
-		conf.WebhookURL = ""
-
-	}
 	return nil
 }
 
