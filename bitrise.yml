@@ -5,6 +5,10 @@ app:
   envs:
   - BITRISE_STEP_GIT_CLONE_URL: https://github.com/HarperDog/steps-quill-message.git
 
+trigger_map:
+- push_branch: '*'
+  workflow: test
+
 workflows:
   test:
     before_run:
