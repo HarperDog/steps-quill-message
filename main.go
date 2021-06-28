@@ -111,7 +111,7 @@ func postMessage(conf Config, msg Message) error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("Request to Slack: %s\n", b)
+	log.Debugf("Request to Quill: %s\n", b)
 
 	url := strings.TrimSpace(string(conf.WebhookURL))
 	if url == "" {
@@ -172,5 +172,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	log.Donef("\nSlack message successfully sent! 🚀\n")
+	log.Donef("\nQuill message successfully sent! 🚀\n")
 }
